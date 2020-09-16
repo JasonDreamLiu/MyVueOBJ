@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import App from './App.vue';
+import App from './App';
 
 new Vue({
     render: h => h(App),
-}).$mount('#jsl-app');
+}).$mount('#app');
 Vue.config.devtools = true

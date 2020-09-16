@@ -2,6 +2,8 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 module.exports = {
     mode: 'development',
     entry: path.join(__dirname,'./src/main.js'),  //入口
@@ -14,12 +16,15 @@ module.exports = {
     },
     resolve: {
         // 将 `.ts` 添加为一个可解析的扩展名。
-        extensions: ['.ts', '.js']
+        extensions: ['.js', '.ts', '.vue'],
+        alias:{
+            "@":path.resolve(__dirname, './src'),
+        }
     },
     devServer: {
         contentBase: './dist',
     },
-    devtool: 'inline-source-map',  //开发环境eval-cheap-module-source-map  生产环境：eval
+    devtool: 'eval',  //开发环境eval-cheap-module-source-map  生产环境：eval
     module: {
         rules: [
             {
@@ -46,16 +51,7 @@ module.exports = {
                 use:[
                     'vue-style-loader',
                     'style-loader',
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            // 开启 CSS Modules
-                            modules: true,
-                            // 自定义生成的类名
-                            localIdentName: '[local]_[hash:base64:8]'
-                        }
-                    },
-                    'postcss-loader'
+                    'css-loader'
                 ]
             },
             {
@@ -63,23 +59,8 @@ module.exports = {
                 use: [
                     'vue-style-loader',
                     'style-loader',
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            // 开启 CSS Modules
-                            modules: true,
-                            // 自定义生成的类名
-                            localIdentName: '[local]_[hash:base64:8]'
-                        }
-                    },
-                    {
-                        loader: 'less-loader',
-                        options: {
-                            lessOptions:{
-                                strictMath: true,
-                            },
-                        },
-                    },
+                    'css-loader',
+                    'less-loader'
                 ],
             },
             {
@@ -112,7 +93,7 @@ module.exports = {
         new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
         new HtmlWebpackPlugin({
             title: "Vue测试",
-            template: "app.html"
+            template: "./src/app.html"
         }),
         // 请确保引入这个插件！
         new VueLoaderPlugin()

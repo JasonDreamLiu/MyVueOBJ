@@ -1,6 +1,6 @@
 <template>
 <div class="hello">
-  <h1>{{ msg }}</h1>
+  <h1 class="title">{{ msg }}</h1>
   <p>
     欲梦测试写Vue单页面
   </p>
@@ -16,6 +16,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+@import "./index.less";
+</style>
+<style lang="less">
+@import "@/style/index.less";
 </style>
