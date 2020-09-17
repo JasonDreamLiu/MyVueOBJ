@@ -1,7 +1,11 @@
 import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import App from './App';
 
+Vue.use(ElementUI);
+
+Vue.config.devtools = true;
 new Vue({
     render: h => h(App),
 }).$mount('#app');
-Vue.config.devtools = true

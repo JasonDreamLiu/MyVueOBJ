@@ -3,23 +3,45 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin');    //最小化打包  ---生产环境才需使用，开发环境可以不引用，后期优化再来处理
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');  //最小化打包样式文件  ---生产环境才需使用，开发环境可以不引用，后期优化再来处理
+const devMode = process.env.NODE_ENV !== 'production';
+
 
 module.exports = {
     mode: 'development',
     entry: path.join(__dirname,'./src/main.js'),  //入口
     output: {
         path: path.join(__dirname, './dist'),  //出口
-        filename: "[name].[contenthash].js",   //输出文件名
+        filename: "js/[name].js",   //输出文件名
+        chunkFilename: 'js/[name].[hash:8].js',
     },
     optimization: {
+        minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
         runtimeChunk: 'single',
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/](vue|vue-style-loader)[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                },
+                commons: {
+                    name: 'commons',
+                    chunks: 'initial',
+                    minChunks: 2
+                }
+            }
+        }
     },
     resolve: {
         // 将 `.ts` 添加为一个可解析的扩展名。
         extensions: ['.js', '.ts', '.vue'],
         alias:{
-            "@":path.resolve(__dirname, './src'),
-        }
+        },
+        cacheWithContext:false, //如果你使用自定义 resolve plugin 规则，并且没有指定 context 上下文，可以设置 false
+        symlinks:false  //如果你不使用 symlinks（例如 npm link 或者 yarn link），可以设置 false
     },
     devServer: {
         contentBase: './dist',
@@ -33,8 +55,9 @@ module.exports = {
                 options: { appendTsSuffixTo: [/\.vue$/] }
             },
             {
-              test: /\.vue$/,
-              loader: 'vue-loader'
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                include: path.resolve(__dirname,'src')
             },
             // 它会应用到普通的 `.js` 文件
             // 以及 `.vue` 文件中的 `<script>` 块
@@ -44,11 +67,24 @@ module.exports = {
                 exclude: file => (
                     /node_modules/.test(file) &&
                     !/\.vue\.js/.test(file)
-                )
+                ),
+                include: path.resolve(__dirname,'src')
             },
             {
                 test: /\.css$/,
                 use:[
+                    {
+                        loader: process.env.NODE_ENV !== 'production'
+                            ? 'vue-style-loader'
+                            : MiniCssExtractPlugin.loader,
+                        options:{
+                            publicPath: (resourcePath, context) => {
+                                return path.relative(path.dirname(resourcePath), context) + '/style';
+                            },
+                            hmr: process.env.NODE_ENV === 'development',
+                            reloadAll: true,
+                        }
+                    },
                     'vue-style-loader',
                     'style-loader',
                     'css-loader'
@@ -57,11 +93,19 @@ module.exports = {
             {
                 test: /\.less$/,
                 use: [
-                    'vue-style-loader',
-                    'style-loader',
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options:{
+                            publicPath: (resourcePath, context) => {
+                                return path.relative(path.dirname(resourcePath), context) + '/style';
+                            },
+                            hmr: process.env.NODE_ENV === 'development',
+                            reloadAll: true,
+                        }
+                    },
                     'css-loader',
                     'less-loader'
-                ],
+                ]
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
@@ -96,6 +140,10 @@ module.exports = {
             template: "./src/app.html"
         }),
         // 请确保引入这个插件！
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new MiniCssExtractPlugin({
+            filename: devMode ? '[name].css' : '[name].[contenthash:8].css',
+            chunkFilename: devMode ? '[id].css' : '[id].[contenthash:8].css',
+        }),
     ]
 }
