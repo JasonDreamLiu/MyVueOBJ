@@ -1,10 +1,9 @@
 import Vue from 'vue';
-// import {Button} from 'element-ui';
+import router from './routers/router';
 import App from './App';
-
-// Vue.component(Button.name, Button);
 
 Vue.config.devtools = true;
 new Vue({
-    render: h => h(App),
+    router,
+    render: h => h(App)
 }).$mount('#app');

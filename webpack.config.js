@@ -18,6 +18,13 @@ module.exports = {
         filename: "js/[name].js",   //输出文件名
         chunkFilename: 'js/[name].[hash:8].js'
     },
+    performance:{
+        maxEntrypointSize:1000000,
+        maxAssetSize: 250000,
+        assetFilter: function (assetFilename){
+            return assetFilename.endsWith('.js');
+        }
+    },
     optimization: {
         minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
         splitChunks: {

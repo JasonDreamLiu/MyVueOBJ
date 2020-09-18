@@ -33,6 +33,7 @@
     "less": "^3.12.2",
     "loadash": "^1.0.0",
     "vue": "^2.6.12",
+    "vue-router": "^3.4.3",
     "vue-style-loader": "^4.1.2",
     "webpack": "^4.44.1"
   },

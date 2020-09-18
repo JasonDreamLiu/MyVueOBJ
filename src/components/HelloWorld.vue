@@ -1,6 +1,6 @@
 <template>
 <div class="hello">
-  <h1 class="title">{{ msg }}</h1>
+<!--  <h1 class="title">{{ msg }}</h1>-->
   <p>
     欲梦测试写Vue单页面
     <Button>2333344444433</Button>
