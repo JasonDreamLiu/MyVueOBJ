@@ -3,14 +3,16 @@
   <h1 class="title">{{ msg }}</h1>
   <p>
     欲梦测试写Vue单页面
-    <el-button>233333</el-button>
+    <Button>2333344444433</Button>
   </p>
 </div>
 </template>
 
 <script>
+import { Button } from 'element-ui';
 export default {
   name: "HelloWorld",
+  components: {Button},
   props: {
     msg: String
   }

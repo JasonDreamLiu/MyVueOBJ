@@ -7,24 +7,35 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');    //最小化打包  ---生产环境才需使用，开发环境可以不引用，后期优化再来处理
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');  //最小化打包样式文件  ---生产环境才需使用，开发环境可以不引用，后期优化再来处理
 const devMode = process.env.NODE_ENV !== 'production';
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
 module.exports = {
     mode: 'development',
     entry: path.join(__dirname,'./src/main.js'),  //入口
     output: {
-        path: path.join(__dirname, './dist'),  //出口
+        path: path.join(__dirname,'./dist'),  //出口
         filename: "js/[name].js",   //输出文件名
-        chunkFilename: 'js/[name].[hash:8].js',
+        chunkFilename: 'js/[name].[hash:8].js'
     },
     optimization: {
         minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-        runtimeChunk: 'single',
         splitChunks: {
+            chunks: 'all',
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](vue|vue-style-loader)[\\/]/,
+                    test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
+                    chunks: 'all',
+                },
+                element:{
+                    test: /[\\/]element-ui[\\/]/,
+                    name: 'element-ui',
+                    chunks: 'all',
+                },
+                vue: {
+                    test: /[\\/](vue|vue-style-loader)[\\/]/,
+                    name: 'vue',
                     chunks: 'all',
                 },
                 commons: {
@@ -32,7 +43,7 @@ module.exports = {
                     chunks: 'initial',
                     minChunks: 2
                 }
-            }
+             }
         }
     },
     resolve: {
@@ -71,34 +82,11 @@ module.exports = {
                 include: path.resolve(__dirname,'src')
             },
             {
-                test: /\.css$/,
+                test: /\.(css|less)$/,
                 use:[
-                    {
-                        loader: process.env.NODE_ENV !== 'production'
-                            ? 'vue-style-loader'
-                            : MiniCssExtractPlugin.loader,
-                        options:{
-                            publicPath: (resourcePath, context) => {
-                                return path.relative(path.dirname(resourcePath), context) + '/style';
-                            },
-                            hmr: process.env.NODE_ENV === 'development',
-                            reloadAll: true,
-                        }
-                    },
-                    'vue-style-loader',
-                    'style-loader',
-                    'css-loader'
-                ]
-            },
-            {
-                test: /\.less$/,
-                use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options:{
-                            publicPath: (resourcePath, context) => {
-                                return path.relative(path.dirname(resourcePath), context) + '/style';
-                            },
                             hmr: process.env.NODE_ENV === 'development',
                             reloadAll: true,
                         }
@@ -142,8 +130,23 @@ module.exports = {
         // 请确保引入这个插件！
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
-            filename: devMode ? '[name].css' : '[name].[contenthash:8].css',
-            chunkFilename: devMode ? '[id].css' : '[id].[contenthash:8].css',
+            filename: 'style/[name].[contenthash:8].css',
+            chunkFilename: 'style/[id].[contenthash:8].css',
+            allChunks: true
         }),
+        // new BundleAnalyzerPlugin(
+        //     {
+        //         analyzerPort: 8889,
+        //         reportFilename: 'report.html',
+        //         defaultSizes: 'parsed',
+        //         openAnalyzer: false,
+        //         generateStatsFile: false,
+        //         statsFilename: 'stats.json',
+        //         statsOptions: null,
+        //         logLevel: 'info'
+        //     }
+        // ),
+        // new ExtractTextPlugin('styles.css'),
+        // new OptimizeCssAssetsPlugin()
     ]
 }

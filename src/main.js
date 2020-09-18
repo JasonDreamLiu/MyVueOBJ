@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+// import {Button} from 'element-ui';
 import App from './App';
 
-Vue.use(ElementUI);
+// Vue.component(Button.name, Button);
 
 Vue.config.devtools = true;
 new Vue({
