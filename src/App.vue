@@ -1,19 +1,17 @@
 <template>
-  <div id="jsl-app">
-    <h1 class="title">hi</h1>
-<!--    <HelloWorld msg="??????aaaaa啊啊啊啊啊"></HelloWorld>-->
-    <router-view></router-view>
-  </div>
+  <Container direction="vertical" id="jsl-app">
+    <router-view name="header"/>
+    <router-view/>
+    <router-view name="bottom"/>
+  </Container>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import { Container } from 'element-ui';
+
 export default {
   name: "App",
-  components: {HelloWorld},
-  component: {
-    HelloWorld
-  }
+  components: { Container },
 }
 </script>
 
