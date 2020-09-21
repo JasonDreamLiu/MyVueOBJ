@@ -3,10 +3,9 @@
 </template>
 
 <script>
-import { Main } from 'element-ui';
 export default {
 name: "Index",
-  components: { Main },
+  components: {},
 }
 </script>
 

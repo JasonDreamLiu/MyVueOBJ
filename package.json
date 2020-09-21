@@ -3,7 +3,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --open --host 127.0.0.1 --port 8000 --profile --json",
-    "analyz": "webpack --profile --json",
+    "analyz": "webpack-bundle-analyzer --port 8123 dist/stats.json",
     "build": "webpack -p"
   },
   "babel": {

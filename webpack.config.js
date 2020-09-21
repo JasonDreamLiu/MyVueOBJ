@@ -141,18 +141,19 @@ module.exports = {
             chunkFilename: 'style/[id].[contenthash:8].css',
             allChunks: true
         }),
-        // new BundleAnalyzerPlugin(
-        //     {
-        //         analyzerPort: 8889,
-        //         reportFilename: 'report.html',
-        //         defaultSizes: 'parsed',
-        //         openAnalyzer: false,
-        //         generateStatsFile: false,
-        //         statsFilename: 'stats.json',
-        //         statsOptions: null,
-        //         logLevel: 'info'
-        //     }
-        // ),
+        new BundleAnalyzerPlugin(
+            {
+                analyzerMode: 'disabled',
+                analyzerPort: 8889,
+                reportFilename: 'report.html',
+                defaultSizes: 'parsed',
+                openAnalyzer: false,
+                generateStatsFile: false,
+                statsFilename: 'stats.json',
+                statsOptions: null,
+                logLevel: 'info'
+            }
+        ),
         // new ExtractTextPlugin('styles.css'),
         // new OptimizeCssAssetsPlugin()
     ]

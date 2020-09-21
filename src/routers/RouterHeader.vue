@@ -6,29 +6,19 @@
       </Col>
       <Col class="navMenu">
         <div>我是Menu</div>
-        <Menu :default-active="$route.path" mode="horizontal" router>
-          <template v-for="(item, index) in routes">
-            <MenuItem
-                v-if="item.children&&!item.children.length"
-                :key="index"
-                :index="item.path"
-            >
-              {{item.menuName}}
-            </MenuItem>
-
-          </template>
-        </Menu>
+        <JslNavMenu :routes="this.$router.options.routes" />
       </Col>
     </Row>
   </Header>
 </template>
 
 <script>
-import {Header, Row, Col, Menu, MenuItem} from 'element-ui';
+import {Header, Row, Col} from 'element-ui';
+import JslNavMenu from '../components/JslNavMenu';
 
 export default {
   name: "RouterHeader",
-  components: {Header, Row, Col, Menu, MenuItem},
+  components: {Header, Row, Col, JslNavMenu},
   data:function (){
     return {
       routes:[]
@@ -36,7 +26,6 @@ export default {
   },
   mounted: function () {
     console.log(this.$router.options.routes);
-    this.routes = this.$router.options.routes;
   }
 }
 </script>

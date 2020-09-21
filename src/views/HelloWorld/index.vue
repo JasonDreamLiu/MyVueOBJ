@@ -20,9 +20,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import './index.css';
-@import "./index.less";
+@import 'index.css';
+@import "index.less";
 </style>
 <style lang="less">
-@import "../style/index.less";
+@import "../../style/index.less";
 </style>
