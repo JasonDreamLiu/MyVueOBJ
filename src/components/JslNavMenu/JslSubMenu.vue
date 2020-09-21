@@ -1,17 +1,23 @@
 <template>
-<!--  <template v-for="(item,index) in children">-->
-<!--    <template v-if="item.children && item.children.length > 0">-->
-<!--      <Submenu :index="item.puth">-->
-<!--        <template slot="title">{{ item.menuName }}</template>-->
-<!--        <JslMenuItem :children="item.children"/>-->
-<!--      </Submenu>-->
-<!--    </template>-->
-<!--    <template v-else>-->
-<!--      <MenuItem :index="item.puth" :key="item.puth">-->
-<!--        {{ item.menuName }}-->
-<!--      </MenuItem>-->
-<!--    </template>-->
-<!--  </template>-->
+  <Submenu :index="path">
+    <template :slot="menuName"></template>
+    <template v-for="(item,index) in children">
+      <MenuItem
+          v-if="!item.children"
+          :index="item.path"
+          :key="item.path"
+      >
+        {{ item.menuName }}
+      </MenuItem>
+      <JslSubMenu
+          v-else
+          :children="item.children"
+          :name="item.menuName"
+          :path="item.path"
+          :key="item.path"
+      />
+    </template>
+  </Submenu>
 </template>
 
 <script>
@@ -21,11 +27,13 @@ import JslSubMenu from './JslSubMenu';
 export default {
   name: "JslSubMenu",
   props: [
-    'children'
+    'children',
+    'path',
+    'menuName'
   ],
-  components: [
+  components: {
     MenuItem, Submenu, JslSubMenu
-  ]
+  }
 }
 </script>
 

@@ -1,15 +1,20 @@
 <template>
-  <div>路由导航</div>
-  <Menu>
+  <Menu router mode="horizontal">
     <template v-for="(item,index) in routeList">
       <MenuItem
           v-if="!item.children"
-          :index="item.puth"
-          :key="item.push"
+          :index="item.path"
+          :key="item.path"
       >
         {{item.menuName}}
       </MenuItem>
-      <JslSubMenu v-else :children="item.children" />
+      <JslSubMenu
+          v-else
+          :children="item.children"
+          :menuName="item.menuName"
+          :path="item.path"
+          :key="item.path"
+      />
     </template>
   </Menu>
 </template>
@@ -25,9 +30,12 @@ export default {
       routeList: []
     }
   },
-  props: [
-    'routes'
-  ],
+  props: {
+    routes: {
+      type: Array,
+      default: []
+    }
+  },
   components: {
     JslSubMenu, Menu, MenuItem
   },
@@ -47,8 +55,8 @@ export default {
     }
   },
   mounted: function () {
-    routeList = this.props.routes.map(item=>{
-
+    this.routeList = this.routes.map(item=>{
+      return item;
     })
   }
 }
