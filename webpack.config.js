@@ -9,7 +9,9 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');  
 const devMode = process.env.NODE_ENV !== 'production';
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-
+function resolve (dir) {
+    return path.join(__dirname, './dist', dir)
+}
 module.exports = {
     mode: 'development',
     entry: path.join(__dirname,'./src/main.js'),  //入口
@@ -49,6 +51,18 @@ module.exports = {
                     name: 'commons',
                     chunks: 'initial',
                     minChunks: 2
+                },
+                styleCss: {
+                    name: "styleCss",
+                    test: /\.css$/,
+                    chunks: "all",
+                    enforce: true
+                },
+                styleLess: {
+                    name: "styleLess",
+                    test: /\.less/,
+                    chunks: "all",
+                    enforce: true
                 }
              }
         }
@@ -86,8 +100,16 @@ module.exports = {
                     /node_modules/.test(file) &&
                     !/\.vue\.js/.test(file)
                 ),
+                // options: {
+                //     plugins: ['syntax-dynamic-import']
+                // },
                 include: path.resolve(__dirname,'src')
             },
+            // {
+            //     test: /\.js$/,
+            //     loader: 'babel-loader',
+            //     include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+            // },
             {
                 test: /\.(css|less)$/,
                 use:[

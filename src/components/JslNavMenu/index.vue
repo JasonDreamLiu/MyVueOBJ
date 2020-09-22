@@ -1,20 +1,19 @@
 <template>
-  <Menu router mode="horizontal">
+  <Menu :default-active="this.$route.path" mode="horizontal" router>
     <template v-for="(item,index) in routeList">
+<!--      <JslSubMenu-->
+<!--          v-if="item.children&&item.children.length>0"-->
+<!--          :key="item.path"-->
+<!--          :children="item.children"-->
+<!--          :menuName="item.menuName"-->
+<!--          :path="item.path"-->
+<!--      />-->
       <MenuItem
-          v-if="!item.children"
+          :key="item.path"
           :index="item.path"
-          :key="item.path"
       >
-        {{item.menuName}}
+        {{ item.menuName }}
       </MenuItem>
-      <JslSubMenu
-          v-else
-          :children="item.children"
-          :menuName="item.menuName"
-          :path="item.path"
-          :key="item.path"
-      />
     </template>
   </Menu>
 </template>
@@ -27,7 +26,8 @@ export default {
   name: "index",
   data: function () {
     return {
-      routeList: []
+      routeList: [],
+      routeOneMenu: []
     }
   },
   props: {
@@ -43,21 +43,27 @@ export default {
     console.log(props);
   },
   computed: {},
-  methods:{
-    csRoutesToList: function (routes){
-      let oneMenus = [];
-      
-      return routes.map(item=>{
-        if (item.isOneMenu){
-
+  methods: {
+    csRoutesToList: function (routes) {
+      return routes.filter(item => {
+        if (!item.isOneMenu) {
+          if (item.children) {
+            item.children = this.csRoutesToList(item.children);
+          }
+          return true;
+        } else {
+          this.routeOneMenu.push(item);
+          return false;
         }
       })
     }
   },
   mounted: function () {
-    this.routeList = this.routes.map(item=>{
-      return item;
-    })
+    // this.routeList = this.routes.map(item=>{
+    //   return item;
+    // })
+    this.routeList = this.csRoutesToList(this.routes).concat(this.routeOneMenu);
+    console.log("ceshi:", this.routeList, this.routeOneMenu);
   }
 }
 </script>
